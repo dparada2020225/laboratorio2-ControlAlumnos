@@ -8,7 +8,7 @@ const cors = require('cors');
 
 const UsuarioRutes = require('./src/routes/usuario.routes')
 const CursosRutes = require('./src/routes/curso.routes')
-const AsignacionesRutes = require('./src/routes/curso.routes')
+const AsignacionesRutes = require('./src/routes/asignacion.routes')
 
 
 // middelWARE

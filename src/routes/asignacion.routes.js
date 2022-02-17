@@ -1,11 +1,11 @@
 const express = require('express');
-const asignacionCursos = require('../controllers/asignacion.controller');
+const asignacionControlador = require('../controllers/asignacion.controller');
 const md_Autenticacion = require('../middlewares/autenticacion');
 const api = express.Router();
 
-api.post('/AgregarAsignatura', asignacionCursos.AgregarAsignatura); // agregar asignacion
-api.get('/ObtenerAsignaciones', md_Autenticacion.Auth, asignacionCursos.EncontrarAsignaciones);
-api.put('/EditarAsignaciones/:idAsignaciones', md_Autenticacion.Auth, asignacionCursos.EditarAsignaciones);
-api.delete('/EliminarAsignaciones/:idAsignaciones', md_Autenticacion.Auth, asignacionCursos.EliminarAsignaciones);
+api.post('/AgregarAsignatura', md_Autenticacion.Auth, asignacionControlador.AgregarAsignatura); // agregar asignacion
+api.get('/ObtenerAsignaturas', md_Autenticacion.Auth, asignacionControlador.ObtenerAsignaturas);  // obtener asignacion
+api.put('/EditarAsignaturas/:idAsignatura', md_Autenticacion.Auth, asignacionControlador.EditarAsignaturas); // editar asignacion
+api.delete('/EliminarAsignaturas/:idAsignatura', md_Autenticacion.Auth, asignacionControlador.EliminarAsignaturas); // aliminar asignacion
 
-module.exports = api;
+module.exports = api;   
