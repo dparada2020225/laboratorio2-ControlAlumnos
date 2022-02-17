@@ -50,7 +50,7 @@ function RegistrarAlumno(req, res) {
                     modeloUsuario.save((err, usuarioGuardado) => {
                         if (err) return res.status(500).send({ mensaje: 'error en la peticion ' });
                         if (!usuarioGuardado) return res.status(500).send({ mensaje: 'error al guardar usuario ' })
-                        return res.status(200).send({ producto: usuarioGuardado })
+                        return res.status(200).send({ usuario: usuarioGuardado })
 
                     })
                 })
@@ -105,7 +105,7 @@ function RegistrarMaestro(req, res) {
 function Login(req, res) {
     var parametros = req.body;
 
-    Usuario.findOne({ email: parametros.email }, (err, usuarioencontrado) => {
+    Usuario.findOne({ email: parametros.email}, (err, usuarioencontrado) => {
         if (err) return res.status(500).send({ mensaje: 'error en la peticion ' });
         if (usuarioencontrado) {
             bcrypt.compare(parametros.password, usuarioencontrado.password, (err, Verificaciondepasswor) => {
@@ -123,7 +123,7 @@ function Login(req, res) {
 }
 
 
-function EditarUsuario(req, res) {
+function EditarPerfil(req, res) {
 
     var idUser = req.params.idUsuario;
     var parametros = req.body
@@ -135,13 +135,28 @@ function EditarUsuario(req, res) {
         return res.status(500).send({ mensaje: 'no tiene los permisos para editar este usuario' });
     }
 
-    Usuario.findByIdAndUpdate(req.user.sub, { new: true }, (err, usuarioEditado) => {
+    Usuario.findByIdAndUpdate(req.user.sub,parametros, { new: true }, (err, usuarioEditado) => {
         if (err) return res.status(500).send({ mensaje: 'error en la peticion' });
         if (!usuarioEditado) return res.status(500).send({ mensaje: 'Error al editar usuario' })
 
-        return res.status(200).send({ usuario: usuarioEditado });
+        return res.status(200).send({ PerfilEditado: usuarioEditado });
     })
 
+}
+
+function EliminarPerfil(req, res) {
+    var idUser = req.params.idUsuario;
+    
+    if(req.user.sub !== idUser) {
+        return res.status(500).send({ mensaje: 'no tiene los permisos para eliminar este perfil' });
+    }else{ 
+    Usuario.findByIdAndDelete(idUser, (err, PerfilEliminado) => {
+      if (err) return res.status(500).send({ mensaje: "Error en la peticion" });
+      if (!PerfilEliminado)
+        return res.status(500).send({ mensaje: "Error al eliminar el Curso" });
+        return res.status(200).send({ PerfilEliminado: PerfilEliminado });
+    });
+}
 }
 
 
@@ -156,5 +171,6 @@ module.exports = {
     RegistrarMaestro,
     RegistrarAlumno,
     Login,
-    EditarUsuario
+    EditarPerfil,
+    EliminarPerfil
 }

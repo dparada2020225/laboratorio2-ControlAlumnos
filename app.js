@@ -8,6 +8,7 @@ const cors = require('cors');
 
 const UsuarioRutes = require('./src/routes/usuario.routes')
 const CursosRutes = require('./src/routes/curso.routes')
+const AsignacionesRutes = require('./src/routes/curso.routes')
 
 
 // middelWARE
@@ -19,7 +20,7 @@ app.use(express.json())
 app.use(cors())
 
 // carga de rutas
-app.use('/api' ,UsuarioRutes , CursosRutes)
+app.use('/api' ,UsuarioRutes , CursosRutes, AsignacionesRutes)
 
 
 

@@ -23,18 +23,55 @@ function agregarCurso(req, res){
     }
 }
 
+function EditarCurso(req, res){
+    var idCurso = req.params.idCurso;
+    var parametros = req.body;
 
-function obtenerEncuestas(req, res){
-    Encuesta.find({}, (err, encuestasEncontradas)=>{
-        if (err) return res.status(500).send({ mensaje: 'error en la peticion ' });
-        if (!encuestasEncontradas) return res.status(500).send({ mensaje: 'error al obtener encuestas ' })
+    delete parametros.password;
 
-        return res.status(200).send({ encuestas: encuestasEncontradas }) 
-    }).populate('idCreadorEncuesta','nombre email')
+    if(req.user.rol == "ROL_ALUMNO"){
+        return res.status(500).send({ mensaje: 'no tiene los permisos para editar este curso usted es un alumno' });
+    }else{
+        Curso.findByIdAndUpdate(idCurso,parametros,{new: true}, (err, cursoEditado) => {
+            if(err) return res.status(500).send({ mensaje: 'error en la peticion' });
+            if(!cursoEditado) return res.status(500).send({ mensaje: 'Error al editar curso'})
+    
+            return res.status(200).send({ curso: cursoEditado});
+        })
+    }
 }
+
+function EliminarCurso(req, res) {
+    var idCurso = req.params.idCurso;
+    
+    if(req.user.rol == "ROL_ALUMNO"){
+        return res.status(500).send({ mensaje: 'no tiene los permisos para eliminar este curso usted es un alumno' });
+    }else{ 
+    Curso.findByIdAndDelete(idCurso, (err, cursoEliminado) => {
+      if (err) return res.status(500).send({ mensaje: "Error en la peticion" });
+      if (!cursoEliminado)
+        return res.status(500).send({ mensaje: "Error al eliminar el Curso" });
+        return res.status(200).send({ cursoEliminado: cursoEliminado });
+    });
+}
+}
+
+function ObtenerCursos (req, res) {
+    var maestro = req.params.idMaestro;
+    if(req.user.sub !== maestro){
+        return res.status(500).send({ mensaje: 'no tiene los permisos para ver estos cursos' });
+    }else{
+    Curso.find({}, (err, cursosEncontrados) => {
+        return res.send({ curso: cursosEncontrados })
+    }).populate("idMaestro", "nombre");
+}
+}
+
 
 module.exports={
     agregarCurso,
-    obtenerEncuestas
+    EditarCurso,
+    EliminarCurso,
+    ObtenerCursos
 
 }

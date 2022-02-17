@@ -8,4 +8,4 @@ const usuaioSchema = new Schema ({
 
 })
 
-module.exports = mongoose.model('Cusros',usuaioSchema)
+module.exports = mongoose.model('Cursos',usuaioSchema)
